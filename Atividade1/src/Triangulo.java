@@ -1,11 +1,11 @@
 public class Triangulo {
 
 
-    int a;
-    int b;
-    int c;
+    float a;
+    float b;
+    float c;
 
-    public Triangulo(int a, int b, int c) {
+    public Triangulo(float a, float b, float c) {
         this.a = a;
         this.b = b;
         this.c = c;
@@ -19,12 +19,12 @@ public class Triangulo {
 
     public double area() {
 
-        int p = (this.a + this.b + this.c) / 2;
-        return  Math.sqrt(p * (p - a) * (p - b) * (p - c));
+        float p = perimetro() / 2;
+        return  Math.sqrt(p * (p - this.a) * (p - this.b) * (p - this.c));
 
     }
 
-    public int perimetro() {
+    public float perimetro() {
 
         return this.a + this.b + this.c;
 
