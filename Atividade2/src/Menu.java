@@ -16,9 +16,8 @@ public class Menu {
     public static void tudo() {
         cidades = new ListaDupla<>();
     String decricao = "1. Cadastrar cidades na lista principal.\n2. Cadastrar ligações diretas entre cidades.\n" +
-            "3. Listar todas as cidades com suas ligações diretas.\n 4. Dado o nome de uma cidade de origem e uma cidade de destino, verificar se existe uma igação direta e, se sim, exibir o tempo estimado da entrega.\n" +
-            "5. Dado um tempo limite (em minutos), exibir todas as ligações diretas em toda a malha que possam ser realizadas dentro desse tempo." +
-            "6. Sair do programa.";
+            "3. Listar todas as cidades com suas ligações diretas.\n4. Dado o nome de uma cidade de origem e uma cidade de destino, verificar se existe uma ligação direta e, se sim, exibir o tempo estimado da entrega.\n" +
+            "5. Dado um tempo limite (em minutos), exibir todas as ligações diretas em toda a malha que possam ser realizadas dentro desse tempo.\n" + "6. Sair do programa.";
     String op = "";
 
         while (!op.equals("exit")) {
@@ -42,11 +41,13 @@ public class Menu {
                     break;
 
                 case "3":
-
+                    showMessageDialog(null, cidades.imprimir());
                     break;
 
                 case "4":
-
+                    String cidadeOri  = showInputDialog("Digite a cidade de origem: ");
+                    String destino  = showInputDialog("Digite a cidade de destino: ");
+                    detinoP(cidadeOri, destino);
                     break;
 
                 case "5":
@@ -96,7 +97,9 @@ public class Menu {
 
     }
 
+
     public static Cidade pesquisar(String cidadeP){
+
         Cidade cidade = null;
         while(true){
             try{
@@ -111,8 +114,22 @@ public class Menu {
         return cidade;
     }
 
+    public static void detinoP(String cidadeOri, String destino) {
+        Cidade ori = pesquisar(cidadeOri);
+        if (ori != null ) {
+            NoDuplo<Ligacao> dst = ori.getDireta().buscar(new Ligacao(destino));
+
+            if (dst != null) {
+
+                showMessageDialog(null, "A viagem de " + ori.getNome() + " até " +dst.getDado().getNome() + " tem tempo estimado de " + dst.getDado().getTempo() + " minutos");
+                return;
+            }
+
+        }
+        showMessageDialog(null , "Não existe trajeto de " + cidadeOri + " até " + destino);
 
 
+    }
 
 
 }

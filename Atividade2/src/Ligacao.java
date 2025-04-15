@@ -16,6 +16,16 @@ public class Ligacao {
 
     }
 
+    public Ligacao(String nome) {
+        this.nome = nome;
+    }
+
+    public Ligacao getDado() {
+        Ligacao aux = new Ligacao(this.nome, trafego, distancia, pedagios);
+        return aux;
+
+    }
+
     public double getTempo() {
         return tempo;
     }
@@ -28,5 +38,17 @@ public class Ligacao {
         return nome;
     }
 
+    @Override
+    public String toString() {
+        return nome + " | Distancia " + distancia + " |Tráfego " + trafego + " | Pedágio " + pedagios + " | Tempo " + tempo;
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+
+        return (obj != null) &&
+                (obj instanceof Ligacao) &&
+                ((Ligacao) obj).getNome().equals(this.nome);
+
+    }
 }

@@ -25,4 +25,26 @@ public class Cidade {
                 ((Cidade) obj).getNome().equals(this.nome);
 
     }
+
+    @Override
+    public String toString() {
+        String retorno = imprimir();
+        return "Cidade principal " + nome + " -> " + retorno;
+    }
+
+    public String imprimir() {
+
+        NoDuplo<Ligacao> aux = direta.first;
+        String msg = aux.getDado().toString();
+
+        while (aux.getProx() != null) {
+
+            aux = aux.getProx();
+            msg += ", " + aux.getDado().toString();
+
+        }
+
+        return msg;
+
+    }
 }
