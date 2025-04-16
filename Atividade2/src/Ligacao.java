@@ -40,7 +40,7 @@ public class Ligacao {
 
     @Override
     public String toString() {
-        return nome + " | Distancia " + distancia + " |Tráfego " + trafego + " | Pedágio " + pedagios + " | Tempo " + tempo;
+        return nome + " | Distancia " + distancia + " |Tráfego " + trafego + " | Pedágio " + pedagios + " | Tempo " + tempo + "\n";
     }
 
     @Override
@@ -51,4 +51,5 @@ public class Ligacao {
                 ((Ligacao) obj).getNome().equals(this.nome);
 
     }
+
 }

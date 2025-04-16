@@ -29,7 +29,7 @@ public class Cidade {
     @Override
     public String toString() {
         String retorno = imprimir();
-        return "Cidade principal " + nome + " -> " + retorno;
+        return "Cidade principal " + nome + " -> " + retorno + "\n";
     }
 
     public String imprimir() {
@@ -46,5 +46,17 @@ public class Cidade {
 
         return msg;
 
+    }
+
+    public NoDuplo<Ligacao> buscarTempo(Ligacao dado, double tempo) {
+        NoDuplo<Ligacao> aux = this.direta.getFirst();
+        while(aux != null){
+            if(aux.getDado().getTempo() <= tempo)
+                return aux;
+            else{
+                aux = aux.getProx();
+            }
+        }
+        return null;
     }
 }

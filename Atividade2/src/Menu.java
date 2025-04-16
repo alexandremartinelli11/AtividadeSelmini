@@ -26,18 +26,15 @@ public class Menu {
 
                 case "1":
 
-                    String nome = showInputDialog("Digite o nome do cidade: ");
+                    String nome = showInputDialog("Digite o nome do cidade: ").toUpperCase().trim();
                     cidades.add(new NoDuplo<Cidade>(new Cidade(nome)));
                     break;
 
                 case "2":
 
-                    nome = showInputDialog("Digite o nome da nova cidade: ");
-                    String cidadeP = showInputDialog("Qual a cidade que ela tem ligação direta: ");
-                    double distancia = parseDouble(showInputDialog("Digite a distancia entre as cidades: "));
-                    double trafego = parseDouble(showInputDialog("Digite o fator tráfego entre as cidades: "));
-                    int pedagios = parseInt(showInputDialog("Digite os pedagios entre as cidades: "));
-                    createCidade(nome, cidadeP, distancia, trafego, pedagios);
+                    nome = showInputDialog("Digite o nome da nova cidade: ").toUpperCase().trim();
+                    String cidadeP = showInputDialog("Qual a cidade que ela tem ligação direta: ").toUpperCase().trim();
+                    createCidade(nome, cidadeP);
                     break;
 
                 case "3":
@@ -45,13 +42,14 @@ public class Menu {
                     break;
 
                 case "4":
-                    String cidadeOri  = showInputDialog("Digite a cidade de origem: ");
-                    String destino  = showInputDialog("Digite a cidade de destino: ");
+                    String cidadeOri  = showInputDialog("Digite a cidade de origem: ").toUpperCase().trim();
+                    String destino  = showInputDialog("Digite a cidade de destino: ").toUpperCase().trim();
                     detinoP(cidadeOri, destino);
                     break;
 
                 case "5":
-
+                    double tempo = parseDouble(showInputDialog("Qual o tempo limite "));
+                    showMessageDialog(null,tempoF(tempo));
                     break;
                 case "6":
                     int r = showConfirmDialog(null, "Realmente deseja sair?");
@@ -67,7 +65,7 @@ public class Menu {
 
     };
 
-    public static void createCidade(String nome, String cidadeP, double distancia, double trafego, int pedagios) {
+    public static void createCidade(String nome, String cidadeP) {
         Cidade vai = pesquisar(cidadeP);
         if (vai == null) {
 
@@ -75,7 +73,20 @@ public class Menu {
             if (r == YES_OPTION) {
 
                 cidades.add(new NoDuplo<>(new Cidade(cidadeP)));
-                showMessageDialog(null, "Cidade criada com sucesso");
+                showMessageDialog(null, "Cidade" + cidadeP + " criada com sucesso");
+                double distancia = parseDouble(showInputDialog("Digite a distancia entre as cidades: "));
+                double trafego = parseDouble(showInputDialog("Digite o fator tráfego entre as cidades: "));
+                int pedagios = parseInt(showInputDialog("Digite os pedagios entre as cidades: "));
+                if (distancia >= 0.0 && trafego != 0.0 && pedagios != 0) {
+                    NoDuplo<Cidade> c = cidades.buscar(new Cidade(cidadeP));
+                    c.getDado().getDireta().add(new NoDuplo<>(new Ligacao(nome, distancia, trafego, pedagios)));
+                    showMessageDialog(null, "Cidade" + nome + " criada com sucesso");
+
+                }
+                else {
+                    showMessageDialog(null, "Não foi possível criar a cidade " +  nome + " devido a valores ínvalidos");
+                }
+
 
             }
 
@@ -84,16 +95,21 @@ public class Menu {
                 return;
 
             }
-
-            NoDuplo<Cidade> c = cidades.buscar(new Cidade(cidadeP));
-            c.getDado().getDireta().add(new NoDuplo<>(new Ligacao(nome, distancia, trafego, pedagios)));
-            showMessageDialog(null, "Cidade criada com sucesso");
             return;
 
         }
-        NoDuplo<Cidade> c = cidades.buscar(new Cidade(cidadeP));
-        c.getDado().getDireta().add(new NoDuplo<Ligacao>(new Ligacao(nome, distancia, trafego, pedagios)));
-        showMessageDialog(null, "Cidade criada com sucesso");
+        double distancia = parseDouble(showInputDialog("Digite a distancia entre as cidades: "));
+        double trafego = parseDouble(showInputDialog("Digite o fator tráfego entre as cidades (0-2): "));
+        int pedagios = parseInt(showInputDialog("Digite os pedagios entre as cidades: "));
+
+        if (distancia >= 0.0 && trafego != 0 && pedagios != 0) {
+            NoDuplo<Cidade> c = cidades.buscar(new Cidade(cidadeP));
+            c.getDado().getDireta().add(new NoDuplo<>(new Ligacao(nome, distancia, trafego, pedagios)));
+            showMessageDialog(null, "Cidade " + nome + " criada com sucesso");
+        }
+        else {
+            showMessageDialog(null, "Não foi possível criar a cidade " +  nome + " devido a valores ínvalidos");
+        }
 
     }
 
@@ -131,5 +147,53 @@ public class Menu {
 
     }
 
+     /* public static String tempoF(double tempo) {
 
+        NoDuplo<Cidade> aux = cidades.getFirst();
+        String msg = "";
+
+        while(aux.getDado() != null){
+
+            if (aux.getDado() == null)
+                return msg;
+
+            NoDuplo<Ligacao> tenta = aux.getDado().buscarTempo(aux.getDado().getDireta().getFirst().getDado(), tempo);
+            msg += tenta.getDado().getNome() + " " + tenta.getDado().getTempo() + " minutos";
+
+
+            aux = aux.getProx();
+        }
+        return msg;
+
+    }
+
+      */
+
+    public static String tempoF(double tempo) {
+
+        String msg = "";
+        NoDuplo<Cidade> aux = cidades.getFirst();
+
+        while (aux != null) {
+            Cidade atual = aux.getDado();
+            ListaDupla<Ligacao> ligAtual = atual.getDireta();
+
+            if (ligAtual != null) {
+                NoDuplo<Ligacao> ligacao = ligAtual.getFirst();
+
+                while (ligacao != null) {
+
+                    Ligacao x = ligacao.getDado();
+                    if (x.getTempo() <= tempo)
+                        msg += atual.getNome() + " -> " + x.getNome() + "(" + x.getTempo() + ")";
+                ligacao = ligacao.getProx();
+                }
+
+            }
+            aux = aux.getProx();
+        }
+        if (msg.equals(""))
+            msg = "Nao existem caminhos com menso qw o tempo limite";
+        return msg;
+    }
 }
